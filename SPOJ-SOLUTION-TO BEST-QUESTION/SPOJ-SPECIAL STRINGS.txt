@@ -1,0 +1,109 @@
+// created by: Prashant Kumar Singh :)
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define gr greater<ll>()
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define f first
+#define s second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+using namespace std;
+int n;
+ll dp[31][4][4][4];
+ll solve(int pos, int ppre, int pre, int cur)
+{
+	int mark[4], flag = 0;
+	MS0(mark);
+	mark[ppre] = 1, mark[pre] = 1, mark[cur] = 1;
+	for (int i = 1; i <= 3; i++)
+	{
+		if (!mark[i])
+			flag = 1;
+	}
+	if (pos == 0)
+	{
+		if (flag)
+			return 1;
+	}
+	if (!flag)
+		return 0;
+	ll ans = 0;
+	if (dp[pos][ppre][pre][cur] != -1)
+		return dp[pos][ppre][pre][cur];
+	for (int i = 1; i <= 3; i++)
+	{
+		flag = 0;
+		MS0(mark);
+		mark[pre] = 1, mark[cur] = 1, mark[i] = 1;
+		for (int i = 1; i <= 3; i++)
+		{
+			if (!mark[i])
+				flag = 1;
+		}
+		if (flag)
+			ans += solve(pos - 1, pre, cur, i);
+	}
+	dp[pos][ppre][pre][cur] = ans;
+	return ans;
+}
+ 
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+#endif
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		ll res = 0;
+		MS1(dp);
+		cin >> n;
+		if (n == 1)
+			cout << "3" << endl;
+		else if (n == 2)
+			cout << "9" << endl;
+		else
+		{
+			for (int i = 1; i <= 3; i++)
+			{
+				for (int j = 1; j <= 3; j++)
+				{
+					for (int k = 1; k <= 3; k++)
+					{
+						res += solve(n - 3, i, j, k);
+					}
+				}
+			}
+			cout <<res << endl;
+		}
+	}
+ 
+ 
+	return 0;
+} 

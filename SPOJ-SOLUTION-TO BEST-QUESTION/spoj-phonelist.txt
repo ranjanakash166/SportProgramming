@@ -1,0 +1,119 @@
+/*
+* @problem: TRIE
+* PLEDGE : I WILL BE BLUE IN CODEFORCES BEFORE MY VACATION ENDS.
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 1e5 + 10;
+using namespace std;
+string s;
+struct trie
+{
+	int isword;
+	int edge[10];
+	trie()
+	{
+		isword = 0;
+		for (int i = 0; i < 10; i++)
+		{
+			edge[i] = -1;
+		}
+	}
+} trie[MAX];
+int ns = 0;
+bool flag = 0;
+void insert(string s, int j)
+{
+	int node = 0;
+	for (int i = 0; i < s.length(); i++)
+	{
+		int x = s[i] - '0';
+		if (trie[node].edge[x] == -1)
+		{
+			trie[node].edge[x] = ++ns;
+		}
+		node = trie[node].edge[x];
+		//cout << node << " ---> " << x << endl;
+		if (trie[node].isword && trie[node].isword != s.length())
+		{
+			flag = 1;
+		}
+	}
+	trie[node].isword = s.length();
+	for (int i = 0; i < 10; i++)
+	{
+		if (trie[node].edge[i] != -1)
+			flag = 1;
+	}
+}
+void reset()
+{
+	flag = 0;
+	ns = 0;
+	for (int i = 0; i < MAX; i++)
+	{
+		trie[i].isword = 0;
+		for (int j = 0; j < 10; j++)
+		{
+			trie[i].edge[j] = -1;
+		}
+	}
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	int n, t;
+	cin >> t;
+	while (t--)
+	{
+		cin >> n;
+		for (int i = 1; i <= n; i++)
+		{
+			cin >> s;
+			insert(s, i);
+			//cout << s << endl;
+		}
+		if (flag)
+			cout << "NO" << endl;
+		else
+			cout << "YES" << endl;
+		reset();
+	}
+ 
+	return 0;
+} 

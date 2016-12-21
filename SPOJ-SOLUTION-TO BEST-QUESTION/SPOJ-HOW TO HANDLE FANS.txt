@@ -1,0 +1,39 @@
+#include<iostream>
+#include<cstring>
+#define _ ios_base::sync_with_stdio(0);cin.tie(0);
+typedef long long ll;
+using namespace std;
+ll MaxVal=1000000;
+ll tree[1000001]={0};
+void update(ll idx ,ll val){
+while (idx <= MaxVal){
+tree[idx] += val;
+idx += (idx & -idx);
+}
+}
+ll read(ll idx){
+ll sum = 0;
+while (idx > 0){
+sum += tree[idx];
+idx -= (idx & -idx);
+}
+return sum;
+}
+int main()
+{
+	_
+ll t,a,b,n;
+	string s;
+	cin>>n>>t;
+	MaxVal=n;
+	memset(tree,0,sizeof tree);
+	while(t--)
+	{
+		cin>>s>>a>>b;
+		if(s=="find")
+		cout<<read(b)-read(a-1)<<"\n";
+		else
+		update(a,b);
+	}
+	return 0;
+} 

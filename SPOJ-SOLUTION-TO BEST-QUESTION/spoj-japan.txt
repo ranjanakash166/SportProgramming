@@ -1,0 +1,120 @@
+/*
+* @problem: xx
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 1e5 + 10;
+using namespace std;
+int bit[MAX];
+vector<pii>v;
+int query(int x)
+{
+	int ans = 0;
+	while (x > 0)
+	{
+		ans += bit[x];
+		x -= (x & (-x));
+	}
+	return ans;
+}
+void update(int x)
+{
+	while (x < MAX)
+	{
+		bit[x] += 1;
+		x += (x & (-x));
+	}
+	//cout<<"ok"<<endl;
+}
+bool cmp(pii a, pii b)
+{
+	if (a.ff < b.ff)
+		return true;
+	if (a.ff == b.ff)
+	{
+		if (a.ss > b.ss)
+			return true;
+		else
+			return false;
+	}
+	return false;
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	int t, a, b, k, x, y;
+    cin>>t;
+	for(int tc =1;tc<=t;tc++)
+	{
+		MS0(bit);
+		v.clear();
+		cin >> a >> b >> k;
+		for (int i = 1; i <= k; i++)
+		{
+			cin >> x >> y;
+			v.pb({x, y});
+		}
+		sort(v.begin(), v.end(), cmp);
+		v.pb({ -1, -1});
+		ll ans = 0;
+		stack<int>st;
+		for (int i = 0; i < (int)(v.size() - 1); i++)
+		{
+			//cout<<v[i].ff<<" -- > "<<v[i].ss<<endl;
+			ans += (query(1001) - query(v[i].ss));
+			if (v[i].ff != v[i + 1].ff)
+			{
+				update(v[i].ss);
+				while (!st.empty())
+				{
+					int x = st.top();
+					st.pop();
+					update(x);
+				}
+			}
+			else
+			{
+				//cout << v[i].ff << " " << v[i].ss << endl;
+				st.push(v[i].ss);
+			}
+		}
+		printf("Test case %d: %lld\n", tc, ans);
+	}
+	return 0;
+} 

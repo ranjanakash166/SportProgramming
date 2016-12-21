@@ -1,0 +1,166 @@
+/*
+* @problem: bekar
+* PLEDGE : I WILL BE BLUE IN CODEFORCES BEFORE MY VACATION ENDS.
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 300100;
+using namespace std;
+ll bt[MAX];
+int n, m, k, x1;
+vector<int>v[MAX], own[MAX];
+int qr[MAX], ql[MAX];
+ll th[MAX], val[MAX], ans[MAX], lo[MAX], hi[MAX];
+void update(int x, ll vl)
+{
+	while (x<=m)
+	{
+		bt[x] += vl;
+		x += (x & (-x));
+	}
+}
+ll query(int x)
+{
+	ll res = 0;
+	while (x>0)
+	{
+		res += bt[x];
+		x -= (x & (-x));
+	}
+	return res;
+}
+void apply(int i)
+{
+	int l = ql[i];
+	int r = qr[i];
+	ll vl = val[i];
+	//cout<<l<<" "<<r<<" "<<vl<<endl;
+	if (l <= r)
+	{
+		update(l, vl);
+		update(r + 1, - vl);
+	}
+	else
+	{
+		//cout<<"kutte "<<endl;
+		update(1, vl);
+		update(r + 1, -vl);
+		update(l, vl);
+	}
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	cin >> n >> m;
+	for (int i = 1; i <= m; i++)
+	{
+		cin >> x1;
+		own[x1].pb(i);
+	}
+	for (int i = 1; i <= n ; i++)
+	{
+		cin >> th[i];
+	}
+	// for(int i=1;i<=n;i++)
+	// {
+	// 	 for(int j=0;j<own[i].size();j++)
+	// 	 	cout<<own[i][j]<<" ";
+	// 	 cout<<endl;
+	// }
+	cin >> k;
+	for (int i = 1; i <= k; i++)
+	{
+		cin >> ql[i] >> qr[i] >> val[i];
+	}
+	//cout << endl;
+	int ch = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		lo[i] = 1;
+		hi[i] = k;
+		v[(lo[i] + hi[i]) / 2].pb(i);
+		ch = 1;
+	}
+	while (ch)
+	{
+		ch = 0;
+		MS0(bt);
+		for (int i = 1; i <= k; i++)
+		{
+			apply(i);
+			for (int j = 0; j < v[i].size(); j++)
+			{
+				x1 = v[i][j];
+				//cout << x1 << endl;
+				ll s = 0;
+				for (int a = 0; a < own[x1].size(); a++)
+				{
+					//cout << query(own[x1][a]) << " " << own[x1][a] << endl;
+					s += query(own[x1][a]);
+					if(s>=th[x1])
+						break;
+				}
+				if (s >= th[x1])
+				{
+					//cout << "madharchod hai bc" << endl;
+					ans[x1] = i;
+					hi[x1] = i - 1;
+				}
+				else
+				{
+					lo[x1] = i + 1;
+				}
+				if (lo[x1] <= hi[x1])
+				{
+					v[(lo[x1] + hi[x1]) / 2].pb(x1);
+					ch = 1;
+				}
+			}
+			v[i].clear();
+		}
+		//cout << "ok i" << endl;
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (ans[i])
+			cout << ans[i] << endl;
+		else
+			cout << "NIE" << endl;
+	}
+	return 0;
+} 

@@ -1,0 +1,178 @@
+// created by: Prashant Kumar Singh :)
+// love sucks :P
+#include<iostream>
+#include<algorithm>
+#include<utility>
+#include<cstring>
+#include<string.h>
+#include<set>
+#include<map>
+#include<math.h>
+#include<stdio.h>
+#include<stack>
+#include<vector>
+#include<functional>
+#include<bitset>
+#include<iomanip>
+#define ll long long
+#define gr greater<ll>()
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+using namespace std;
+const int sz = 10010;
+int dp[sz][15], lev[sz], sum[sz];
+vector<pii>vec[sz];
+//stack<int>s;
+void dfs(int src)
+{
+	stack<int>s;
+	lev[src] = 0;
+	s.push(src);
+	while (!s.empty())
+	{
+		int cur = s.top();
+		s.pop();
+		for (int i = 0; i < vec[cur].size(); i++)
+		{
+			int wt = vec[cur][i].ff;
+			int tmp = vec[cur][i].ss;
+			if (tmp != dp[cur][0])
+			{
+				sum[tmp] = sum[cur] + wt;
+				lev[tmp] = lev[cur] + 1;
+				s.push(tmp);
+				dp[tmp][0] = cur;
+			}
+		}
+	}
+ 
+}
+int LCA(int p, int q)
+{
+	int lg;
+	if (lev[p] < lev[q])
+		swap(p, q);
+	for (lg = 1; (1 << lg) <= lev[p]; lg++);
+	lg--;
+	for (int i = lg; i >= 0; i--)
+	{
+		if (lev[p] - (1 << i) >= lev[q])
+			p = dp[p][i];
+	}
+	if (p == q)
+		return p;
+	for (int i = lg; i >= 0; i--)
+		if (dp[p][i] != -1 && dp[p][i] != dp[q][i])
+			p = dp[p][i], q = dp[q][i];
+	return dp[p][0];
+}
+int q_dis(int a, int b)
+{
+	int lca = LCA(a, b);
+	return sum[a] + sum[b] - 2 * sum[lca];
+}
+int k_node(int a, int b, int k)
+{
+	int diff;
+	int lca = LCA(a, b);
+	//cout << lca << " maa ka land " << endl;
+	if (lev[a] - lev[lca] + 1 >= k)
+	{
+		//cout << a << " " << b << " --- > " << k << " ( " << lca << endl;
+		diff = k - 1;
+		int lg;
+		for (lg = 1; (1 << lg) <= diff; lg++);
+		lg--;
+		for (int i = lg; i >= 0; i--)
+		{
+			if (diff - (1 << i) >= 0)
+			{
+				a = dp[a][i];
+				diff -= (1 << i);
+			}
+		}
+		return a;
+	}
+	else
+	{
+		diff = lev[a] + lev[b] - lev[lca] * 2 - k + 1;
+		int lg;
+		for (lg = 1; (1 << lg) <= diff; lg++);
+		lg--;
+		for (int i = lg; i >= 0; i--)
+		{
+			if (diff - (1 << i) >= 0)
+			{
+				b = dp[b][i];
+				diff -= (1 << i);
+			}
+		}
+		return b;
+	}
+}
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+#endif
+	int p, q, qu, a, b, n, t;
+	cin >> t;
+	for (int ok = 1; ok <= t; ok++)
+	{
+		MS0(lev);
+		for (int i = 0; i < sz; i++)
+			vec[i].clear();
+		cin >> n;
+		int a, b, wt;
+		for (int i = 1; i < n; i++)
+		{
+			cin >> a >> b >> wt;
+			vec[a].pb({wt, b});
+			vec[b].pb({wt, a});
+		}
+		MS1(dp);
+		dfs(1);
+		for (int j = 1; 1 << j <= n; j++)
+		{
+			for (int i = 1; i <= n; i++)
+			{
+				if (dp[i][j - 1] != -1)
+					dp[i][j] = dp[dp[i][j - 1]][j - 1];
+			}
+		}
+		string s;
+		int k;
+		while (cin >> s)
+		{
+			if (s == "DONE")
+				break;
+			else if (s == "DIST")
+			{
+				cin >> a >> b;
+				cout << q_dis(a, b) << endl;
+			}
+			else if (s == "KTH")
+			{
+				cin >> a >> b >> k;
+				cout << k_node(a, b, k) << endl;
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+} 

@@ -1,0 +1,143 @@
+// created by: Prashant Kumar Singh :)
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define gr greater<ll>()
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define f first
+#define s second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+using namespace std;
+int pr[100];
+int dp[12][100][100], x[12], len;
+ 
+int prime()
+{
+	pr[0] = 1, pr[1] = 1;
+	for (int i = 2; i <= 10; i++)
+	{
+		if (!pr[i])
+		{
+			for (int j = i * i; j <= 100; j += i)
+			{
+				pr[j] = 1;
+			}
+		}
+	}
+}
+ 
+int rec(int pos, int sumo, int sume, int flag)
+{
+	if (pos == len)
+	{
+		if (sume - sumo == 1)
+			return 1;
+		else
+			return 0;
+	}
+	if (dp[pos][sumo][sume] != -1 && flag)
+		return dp[pos][sumo][sume];
+	int ans = 0;
+	if (!flag)
+	{
+		for (int i = 0; i < x[pos]; i++)
+		{
+			if ((len - pos) % 2 == 0)
+				ans += rec(pos + 1, sumo, sume + i, 1);
+			else
+				ans += rec(pos + 1, sumo + i, sume, 1);
+		}
+		if ((len - pos) % 2 == 0)
+			ans += rec(pos + 1, sumo, sume + x[pos], 0);
+		else
+			ans += rec(pos + 1, sumo + x[pos], sume, 0);
+	}
+	else
+	{
+		for (int i = 0; i <= 9; i++)
+		{
+			if ((len - pos) % 2 == 0)
+				ans += rec(pos + 1, sumo, sume + i, 1);
+			else
+				ans += rec(pos + 1, sumo + i, sume, 1);
+		}
+		dp[pos][sumo][sume] = ans;
+	}
+	return ans;
+}
+ 
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	//freopen("output.txt","w",stdout);
+#endif
+	int t;
+	prime();
+	string a, b;
+	cin >> t;
+	while (t--)
+	{
+		MS1(dp);
+		cin >> a >> b;
+		int left = 0, right = 0;
+		int pos = 0;
+		ll no = 0;
+ 
+		for (int i = 0; i < a.length(); i++)
+		{
+			x[pos++] = a[i] - 48;
+		}
+		int se = 0, so = 0;
+		for (int i = pos - 1, t = 1; i >= 0; --i)
+		{
+			if (t == 1)
+				so += x[i];
+			else
+				se += x[i];
+			t = 1 - t;
+		}
+		if (se - so == 1)
+		{
+			right++;
+		}
+		len = a.length();
+		left = rec(0, 0, 0, 0);
+		//cout<<b<<" pl" <<endl;
+		pos = 0;
+		MS1(dp);
+		len = b.length();
+		//cout << len << endl;
+		for (int i = 0; i < b.length(); i++)
+			x[pos++] = b[i] - 48;
+		right += rec(0, 0, 0, 0);
+		//cout<<right<<" prashant kumar singh \n";
+		cout << (right - left) << endl;
+	}
+	return 0;
+} 

@@ -1,0 +1,139 @@
+/*
+* @problem: DICT
+* PLEDGE : I WILL BE BLUE IN CODEFORCES BEFORE MY VACATION ENDS.
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 50000 + 10;
+using namespace std;
+char s[MAX];
+struct trie
+{
+	int isword;
+	trie* edge[26];
+	trie()
+	{
+		isword = 0;
+		for (int i = 0; i < 26; i++)
+		{
+			edge[i] = NULL;
+		}
+	}
+};
+trie* root = NULL;
+bool flag = 0;
+trie* res = NULL;
+void insert(char s[], int j)
+{
+	trie* node = root;
+	for (int i = 0; s[i] != '\0'; i++)
+	{
+		int x = s[i] - 'a';
+		if (node->edge[x] == NULL)
+		{
+			node->edge[x] = new trie;
+		}
+		node = node->edge[x];
+	}
+	node->isword = j;
+}
+trie* is_present(char s[])
+{
+	trie* node = root;
+	for (int i = 0; s[i] != '\0'; i++)
+	{
+		int x = tolower(s[i]) - 'a';
+		if (node->edge[x] == NULL)
+		{
+			return NULL;
+		}
+		node = node->edge[x];
+	}
+	for (int i = 0; i < 26; i++)
+	{
+		if (node->edge[i] != NULL)
+			return node;
+	}
+	return NULL;
+}
+char st[40];
+int l = 0;
+void solve(trie* id, trie* gp)
+{
+	if (id->isword && gp != NULL)
+	{
+		printf("%s", s);
+		for (int i = 0; i < l; i++)
+			printf("%c", st[i]);
+		printf("\n");
+	}
+	for (int i = 0; i < 26; i++)
+	{
+		if (id->edge[i] != NULL && id != NULL)
+		{
+			if (id != gp)
+			{
+				st[l++] = (char)(i + 'a');
+				solve(id->edge[i], id);
+			}
+		}
+	}
+	l--;
+}
+int main()
+{
+	int n, t, k;
+	ind(n);
+	root = new trie;
+	for (int i = 1; i <= n; i++)
+	{
+		ins(s);
+		insert(s, i);
+	}
+	ind(k);
+	for (int i = 1; i <= k; i++)
+	{
+		scanf("%s", s);
+		trie* res = is_present(s);
+		l = 0;
+		printf("Case #%d:\n", i);
+		if (res != NULL)
+		{
+			solve(res, NULL);
+		}
+		else
+		{
+			printf("No match.\n");
+		}
+	}
+	return 0;
+} 

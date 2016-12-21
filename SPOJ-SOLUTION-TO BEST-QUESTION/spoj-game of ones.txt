@@ -1,0 +1,62 @@
+/*
+* @problem: GOO
+* PLEDGE : I WILL BE BLUE IN CODEFORCES BEFORE MY VACATION ENDS.
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 1e5 + 10;
+using namespace std;
+pll dp[51];
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	dp[1].ff = 1, dp[1].ss = 1;
+	for (int i = 2; i <= 60; i++)
+	{
+		dp[i].ff = dp[i - 1].ff * 2;
+		dp[i].ss = 2 * dp[i - 1].ss + dp[i - 1].ff;
+	}
+	int t,n;
+	cin >> t;
+	while (t--)
+	{
+		cin >> n;
+		cout << dp[n].ff << " " << dp[n].ss << endl;
+	}
+	return 0;
+} 

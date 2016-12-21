@@ -1,0 +1,66 @@
+// created by: Prashant Kumar Singh :)
+#include<iostream>
+#include<algorithm>
+#include<utility>
+#include<cstring>
+#include<string.h>
+#include<set>
+#include<map>
+#include<math.h>
+#include<stdio.h>
+#include<vector>
+#include<functional>
+#include<bitset>
+#include<iomanip>
+#define ll long long
+#define gr greater<ll>()
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define f first
+#define s second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+using namespace std;
+ll ar[100005];
+ll gcd(ll a, ll b)
+{
+	if (!b)
+		return a;
+	else
+		return gcd(b, a % b);
+}
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+#endif
+	ll n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> ar[i];
+	}
+	ll diff, g = 0;
+	for (int i = 0; i < n - 1; i++)
+	{
+		diff = ar[i + 1] - ar[i] ;
+		g = gcd(g, diff);
+	}
+	ll ans = 0;
+	for (int i = 0; i < n - 1; i++)
+	{
+		ans += (ar[i + 1] - ar[i]) / g - 1;
+	}
+	cout << ans << endl;
+	return 0;
+} 

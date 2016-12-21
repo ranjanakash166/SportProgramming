@@ -1,0 +1,103 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+ 
+using namespace std;
+const int MAX = 1e6 + 5;
+int id[MAX], nodes, k = 0;
+pair <long long, pair<long long , long long > > p[MAX];
+long long a[MAX];
+void initialize()
+{
+	for (int i = 0; i < MAX; ++i)
+		id[i] = i;
+}
+ 
+int root(int x)
+{
+	while (id[x] != x)
+	{
+		id[x] = id[id[x]];
+		x = id[x];
+	}
+	return x;
+}
+ 
+void union1(int x, int y)
+{
+	int p = root(x);
+	int q = root(y);
+	id[p] = id[q];
+}
+ 
+long long kruskal(pair<long long, pair<long long , long long > > p[])
+{
+	long long x, y;
+	long long cost, minimumCost = 0;
+	for (int i = 0; i < k; ++i)
+	{
+		x = p[i].second.first;
+		y = p[i].second.second;
+		cost = p[i].first;
+		if (root(x) != root(y))
+		{
+			minimumCost += cost;
+			//cout << cost << " " << x << " " << y << endl;
+			union1(x, y);
+		}
+	}
+	return minimumCost;
+}
+ 
+int main()
+{
+	long long  x, y, s, edges;
+	long long weight, cost, minimumCost;
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+#endif
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		initialize();
+		k = 0;
+		long long d=0;
+		cin >> nodes >> edges;
+		for (int i = 1; i <= nodes; ++i)
+		{
+			cin >> a[i];
+			if (a[i])
+			{
+				p[k++] = make_pair(0, make_pair(0, i));
+				d++;
+			}
+		}
+		//int k = 0;
+		//long long x,y;
+		for (int i = 0; i < edges; ++i)
+		{
+			cin >> x >> y >> weight;
+			p[k++] = make_pair(weight, make_pair(x, y));
+		}
+		// for (int i = 0; i < k; ++i)
+		// {
+		// 	cout <<p[i].second.first << " " << p[i].second.second <<" "<<p[i].first<< endl;
+		// }
+		//cout << "fuck" << endl;
+		sort(p, p + k);
+		minimumCost = kruskal(p);
+		int flag =0;
+		for(int i=1;i<=nodes;i++)
+		{
+			 if(root(i)!=root(0))
+			 	flag++;
+		}
+		if(flag)
+			cout<<"impossible"<<endl;
+		else
+		cout << minimumCost << endl;
+	}
+	return 0;
+} 

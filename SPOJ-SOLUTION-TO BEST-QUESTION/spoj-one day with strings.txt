@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+#define ULL unsigned long long
+#define p 1000000007
+ULL hashfunc(char str1[],char str2[],int n)
+{
+	ULL hash=0;
+	int i;
+for(i=0;i<=n-1;i++)
+hash=(hash*26+(str2[i]-str1[i]))%p;	
+return hash;
+}
+int main()
+{
+	int m,n,t,k=1;
+	ULL hashstr,ans;
+	char str1[101],str2[101];
+	scanf("%d",&t);
+	while(t--)
+	{
+		scanf("%s%s",str1,str2);
+		m=strlen(str1);
+		n=strlen(str2);
+		hashstr=hashfunc(str1,str2,m);
+		ans=hashstr-1;
+		printf("Case %d: %lld\n",k,ans);
+		k++;
+	}
+	return 0;
+} 

@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<math.h>
+double dist(int x1, int y1, int x2, int y2){
+    return sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+}
+int maxit(int x,int y)
+{
+	return x>y?x:y;
+}
+int main()
+{
+    int t;
+    scanf("%d",&t);
+    while(t--){
+        int a,b,c,h,v;
+        scanf("%d%d%d%d%d",&a,&b,&c,&h,&v);
+        int s=v*h;
+        if(s<abs(b-a)){
+            printf("0\n");
+            continue;
+        }
+        int midval = 0;
+        int st = c;
+		 int end = 10000;
+        int xs = (a+b)/2 + ((a+b)%2 > 0);
+        while(st < end){
+            int mid = (st + end + 1)/2;
+            if(dist(a, c, xs, mid) + dist(b, c, xs, mid) <= s)
+                st = mid;
+            else
+                end = mid-1;
+        }
+        int y1 = st, y2 = c - (st-c);
+ 
+        int midsec = 0, halfrig = 0;
+        if((a+b)%2 == 0)
+            midsec= y1-y2+1, xs++;
+        while(y1>=y2){
+            while(dist(a, c, xs, y1) + dist(b, c, xs, y1) > s && y1 >= y2)
+                y1--, y2++;
+            halfrig += maxit(0, y1-y2+1);
+            xs++;
+        }
+        int res = 2*halfrig + midsec;
+        printf("%d\n",res);
+    }
+}
+ 

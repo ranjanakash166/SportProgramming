@@ -1,0 +1,125 @@
+/*
+* @problem: MTREE
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define mp make_pair
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+using namespace std;
+const int MAX = 100007;
+ll dp[MAX];
+ll ans[MAX];
+ll inv2 = 500000004;
+int vis[MAX];
+vector<pii>v[MAX];
+// ll  powr(ll  a,ll b)
+// {
+// 	if(b==0)
+// 	return 1;
+// 	else if(b%2==0)
+// 	{
+// 		ll  x= powr(a,b/2);
+// 		return (x*x)%mod;
+// 	}
+// 	else
+// 	{
+// 		return ((a*(powr(a,b-1)))%mod);
+// 	}
+// }
+// ll inverse(ll num){
+//     return powr(num,mod - 2);
+// }
+void dfs(int c)
+{
+	vis[c] = 1;
+	for (int i = 0; i < v[c].size(); ++i)
+	{
+		int ch = v[c][i].ss;
+		int wt = v[c][i].ff;
+		if (!vis[ch])
+		{
+			dfs(ch);
+			dp[c] = (dp[c] + (wt * dp[ch]) % mod + mod + wt) % mod;
+		}
+	}
+}
+void solve(int pr)
+{
+	vis[pr] = 1;
+	ll s = 0, sq = 0;
+	for (int i = 0; i < v[pr].size(); i++)
+	{
+		int ch = v[pr][i].ss;
+		int wt = v[pr][i].ff;
+		if (!vis[ch])
+		{
+			solve(ch);
+			ll tmp = (((dp[ch] + 1) * wt) % mod + mod) % mod;
+			s = (s + tmp + mod) % mod;
+			sq = (sq + (tmp * tmp) + mod) % mod;
+		}
+		ans[pr] = ((((s * s) % mod - sq) * inv2)%mod + mod + s) % mod;
+	}
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("output.txt","w",stdout);
+#endif
+	int a, b, wt, n;
+	cin >> n;
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> a >> b >> wt;
+		v[a].pb({wt, b});
+		v[b].pb({wt, a});
+	}
+	MS0(vis);
+	dfs(1);
+	// for (int i = 1; i <= n; ++i)
+	// {
+	// 	cout << dp[i] << " ";
+	// }
+	//cout << endl;
+	MS0(vis);
+	solve(1);
+	//ans[1] = dp[1];
+	ll s = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		s = (s + ans[i]+mod) % mod;
+	}
+	cout << s << endl;
+	return 0;
+} 

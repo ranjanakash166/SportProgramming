@@ -1,0 +1,192 @@
+/*
+* @problem: TOUR
+* PLEDGE : I WILL BE BLUE IN CODEFORCES BEFORE MY VACATION ENDS.
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <stack>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 1000000 + 10;
+using namespace std;
+int s, e;
+int vis[MAX];
+int comp[MAX];
+vector<int>v[MAX], v1[MAX], Q, v2[MAX];
+ll val[MAX], valc[MAX];
+int scc = 1;
+ll res = 0;
+stack<int>st;
+void dfs1(int x)
+{
+	st.push(x);
+	vis[x] = 1;
+	while (!st.empty())
+	{
+		x = st.top();
+		vis[x] = 1;
+		int flag = 1;
+		for (int i = 0; i < v[x].size(); i++)
+		{
+			int cur = v[x][i];
+			if (!vis[cur])
+			{
+				flag = 0;
+			}
+		}
+		if (flag)
+		{
+			Q.pb(x);
+			st.pop();
+		}
+		for (int i = 0; i < v[x].size(); i++)
+		{
+			int cur = v[x][i];
+			if (!vis[cur])
+			{
+				st.push(cur);
+			}
+		}
+	}
+}
+void dfs2(int x)
+{
+	st.push(x);
+	vis[x] = 0;
+	while (!st.empty())
+	{
+		x = st.top();
+		vis[x] = 0;
+		comp[x] = scc;
+		st.pop();
+		for (int i = 0; i < v1[x].size(); i++)
+		{
+			int cur = v1[x][i];
+			if (vis[cur])
+			{
+				st.push(cur);
+			}
+		}
+	}
+}
+stack<pll>s1;
+void dfs(int s, ll ans)
+{
+	//vis[s] = 1;
+	pll x = {s, ans};
+	s1.push(x);
+	while (!s1.empty())
+	{
+		x = s1.top();
+		s1.pop();
+		if (x.ff == e)
+		{
+			res = max(res, x.ss);
+		}
+		else
+		{
+			for (int i = 0; i < v2[x.ff].size(); i++)
+			{
+				int cur = v2[x.ff][i];
+				pll y = {cur, x.ss + valc[cur]};
+				s1.push(y);
+			}
+		}
+	}
+}
+int main()
+{
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	int t, n, m, x, y;
+	ind(n);
+	ind(m);
+	ind(s);
+	ind(e);
+	for (int i = 1; i <= n; i++)
+	{
+		inl(val[i]);
+	}
+	for (int j = 1; j <= m; j++)
+	{
+		ind(x);
+		ind(y);
+		v[x].pb(y);
+		v1[y].pb(x);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis[i])
+			dfs1(i);
+	}
+	for (int i = (int)(Q.size() - 1); i >= 0; i--)
+	{
+		if (vis[Q[i]])
+		{
+			dfs2(Q[i]);
+			scc++;
+		}
+	}
+	Q.clear();
+	for (int i = 0; i <= n; i++)
+		v1[i].clear();
+	for (int i = 1; i <= n; i++)
+	{
+		valc[comp[i]] += val[i];
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		x = comp[i];
+		for (int j = 0; j < v[i].size(); j++)
+		{
+			y = comp[v[i][j]];
+			if (x != y)
+			{
+				v2[x].pb(y);
+				//cout << x << " ---> " << y << endl;
+			}
+		}
+	}
+	if (comp[s] == comp[e])
+	{
+		pl(valc[comp[s]]);
+	}
+	else
+	{
+		s = comp[s];
+		e = comp[e];
+		dfs(s, valc[s]);
+		//ll res;
+		pl(res);
+	}
+	return 0;
+} 

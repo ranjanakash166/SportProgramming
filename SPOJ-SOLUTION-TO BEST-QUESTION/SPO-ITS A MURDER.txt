@@ -1,0 +1,42 @@
+#include<cstring>
+#include<stdio.h>
+using namespace std;
+int MaxVal=1000000;
+long long tree[1000001];
+void update(int idx ,int val){
+while (idx <= MaxVal){
+tree[idx] += val;
+idx += (idx & -idx);
+}
+}
+long long read(int idx){
+long long sum = 0;
+while (idx > 0){
+sum += tree[idx];
+idx -= (idx & -idx);
+}
+return sum;
+}
+int main()
+{
+int i,n,x,val,q,test;
+scanf("%d",&test);
+while(test--)
+{
+	scanf("%d",&n);
+	long long  ans=0;
+	MaxVal=1000000;
+memset(tree,0,sizeof tree);
+for(i=0;i<n;i++)
+{
+	scanf("%d",&x);
+	if(x>0)
+	{
+	ans+=read(x-1);
+	update (x,x);
+}
+}
+printf("%lld\n",ans);
+}
+	return 0;
+} 

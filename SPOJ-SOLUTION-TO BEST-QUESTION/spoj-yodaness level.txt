@@ -1,0 +1,63 @@
+#include<iostream>
+#include<unordered_map>
+#include<string.h>
+#include<utility>
+#include<cstdio>
+#define ll long long 
+#define fasthoja ios_base::sync_with_stdio(0);cin.tie(0);
+using namespace std;
+ ll sz=30005;
+  ll bt[30005];
+ll arr[30005];
+void update(ll indx)
+{
+	while(indx<=sz)
+	{
+		bt[indx]+=1;
+		indx+=(indx)&(-indx);
+	}
+}
+ll query(ll indx)
+{
+	ll ans=0;
+	while(indx>0)
+	{
+		ans+=bt[indx];
+		indx-=(indx)&(-indx);
+	}
+	//cout<<ans<<"\n";
+	return ans;
+}
+int main()
+{
+	fasthoja
+	ll t,n;
+	cin>>t;
+	while(t--)
+	{
+		cin>>n;
+	 string s;
+	unordered_map<string ,ll >mp;
+	 memset(bt,0,sizeof bt);
+	 memset(arr,0,sizeof arr);
+        for (ll i = 1;i<=n;++i) {
+            cin >> s;
+            mp.insert(make_pair(s, i));
+        }
+        for (ll i = 1; i<=n;++i) {
+            cin >> s;
+            pair<string, ll > found = *mp.find(s);
+            arr[i] = found.second;
+        }
+        ll inv=0;
+        for(ll i=1;i<=n;i++)
+        {
+        	inv+=query(n)-query(arr[i]);
+        	update(arr[i]);
+		}
+        cout<<inv<<"\n";
+        mp.clear();
+	}
+	return 0;
+}
+ 

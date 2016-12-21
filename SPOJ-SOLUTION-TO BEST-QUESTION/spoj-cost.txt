@@ -1,0 +1,120 @@
+/*
+* @problem: KOICOST
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define gr greater<pair<ll,pll> >()
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000000
+const int MAX = 2e5 + 10;
+using namespace std;
+ll id[MAX], r[MAX];
+ll suff[MAX];
+pair<ll, pll>p[MAX];
+void initialize()
+{
+	for (int i = 0; i < MAX; ++i)
+	{
+		r[i] = 1;
+		id[i] = i;
+	}
+}
+ 
+long long  root(long long x)
+{
+	while (id[x] != x)
+	{
+		id[x] = id[id[x]];
+		x = id[x];
+	}
+	return x;
+}
+ 
+void union1(long long  x, long long y)
+{
+	long long  u = root(x);
+	long long v = root(y);
+	if (u != v) {
+		if (r[u] == r[v]) {
+			id[v] = u;
+			r[u] += r[v];
+		} else if (r[u] < r[v]) {
+			id[u] = v;
+			r[v] += r[u];
+		} else {
+			id[v] = u;
+			r[u] += r[v];
+		}
+	}
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	ll n, m, a, b, c;
+	cin >> n >> m;
+	initialize();
+	for (int i = 0; i < m; i++)
+	{
+		cin >> a >> b >> c;
+		p[i] = {c, {a, b}};
+	}
+	sort(p, p + m, gr);
+	suff[m - 1] = p[m - 1].ff;
+	for (int i = m - 2; i >= 0; i--)
+	{
+		suff[i] = suff[i + 1] + p[i].ff;
+	}
+	// for (int i = 0; i < m; ++i)
+	// 	cout << suff[i] << " ";
+	// cout << endl;
+	ll ans = 0;
+	for (int i = 0; i < m; i++)
+	{
+		//ll wt = p[i].ff;
+		ll a = p[i].ss.ff;
+		ll b = p[i].ss.ss;
+		if (root(a) != root(b))
+		{
+			ll ra = root(a);
+			ll rb = root(b);
+			//cout << r[ra] << " " << r[rb] << endl;
+			ans = (ans + (((r[ra] * r[rb]) % mod) * suff[i]) % mod) % mod;
+			union1(ra, rb);
+		}
+	}
+	cout << ans << endl;
+	return 0;
+} 

@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include  <algorithm>
+using namespace std;
+#define bitcnt __builtin_popcount
+#define ln length()
+#define rep(i, n) for(int i = 0; i < n; i++)
+#define rrep(i, n) for(int i = n - 1; i >= 0; i--)
+#define all(a)  a.begin(),a.end()
+#define LL long long
+#define limit 1000006
+#define sl(n) scanf("%lld", &n)
+#define s(n)  scanf("%d", &n)
+#define pl(n) printf("%lld", n)
+#define pi(n)  printf("%d", n)
+#define pb push_back
+#define pn printf("\n")
+#define mod 1000000007
+typedef vector<LL> row;
+typedef vector<row> matrix;
+LL color[100005];
+vector<LL>graph[100005];
+LL parent[100005];
+LL r[100005];
+ 
+LL find(LL i)
+{
+	if (i == parent[i]) {
+		return i;
+	}
+	return find(parent[i]);
+}
+ 
+void unionn(LL u, LL v)
+{
+	LL x = find(u);
+	LL y = find(v);
+	if (r[x] < r[y]) {
+		parent[x] = y;
+	}
+	else if (r[y] < r[x]) {
+		parent[y] = x;
+	}
+	else {
+		r[y]++;
+		parent[x] = y;
+	}
+	return;
+}
+ 
+void solve()
+{
+	int n;
+	s(n);
+	rep(i, n - 1) {
+		int u, v; s(u); s(v); u++; v++;
+		graph[u].pb(v);
+		graph[v].pb(u);
+	}
+	for (int i = 1; i <= n; i++) {
+		parent[i] = i;
+		r[i] = 0;
+	}
+	int q;
+	s(q);
+	while (q--) {
+		int ty;
+		s(ty);
+		if (ty == 1) {
+			int node, col;
+			s(node); s(col);
+			node++;
+			color[node] = col;
+			int size = graph[node].size();
+			for (int i = 0; i < size; i++) {
+				int v = graph[node][i];
+				if (col == color[v]) {
+					unionn(v, node);
+				}
+			}
+		}
+		else {
+			int node1, node2;
+			s(node1); s(node2);
+			node1++; node2++;
+			if (find(node1) == find(node2)) {
+				puts("YES");
+			}
+			else {
+				puts("NO");
+			}
+		}
+	}
+}
+ 
+int main()
+{
+	int t = 1;
+	//scanf("%d", &t);
+ 
+	while (t--) {
+		solve();
+	}
+	return 0;
+}
+ 

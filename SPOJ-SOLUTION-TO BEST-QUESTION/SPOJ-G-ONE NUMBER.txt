@@ -1,0 +1,144 @@
+// created by: Prashant Kumar Singh :)
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define gr greater<ll>()
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define f first
+#define s second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+using namespace std;
+int pr[100];
+int dp[10][100], x[10], len;
+ 
+int prime()
+{
+	pr[0]=1,pr[1]=1;
+	for (int i = 2; i <= 10; i++)
+	{
+		if (!pr[i])
+		{
+			for (int j = i * i; j <= 100; j += i)
+			{
+				pr[j] = 1;
+			}
+		}
+	}
+}
+ 
+int rec(int pos, int sum, int flag)
+{
+	if (pos == len)
+	{
+		if (!sum)
+			return 1;
+		else
+			return 0;
+	}
+	if (sum < 0)
+		return 0;
+	if (sum == 0)
+		return rec(pos + 1, 0, 0);
+	if (dp[pos][sum] != -1 && flag)
+		return dp[pos][sum];
+	int ans = 0;
+	if (!flag)
+	{
+		for (int i = 0; i < x[pos]; i++)
+		{
+			ans += rec(pos + 1, sum - i, 1);
+		}
+		ans += rec(pos + 1, sum - x[pos], 0);
+	}
+	else
+	{
+		for (int i = 0; i <= 9; i++)
+		{
+			ans += rec(pos + 1, sum - i,1);
+		}
+		dp[pos][sum] = ans;
+	}
+	return ans;
+}
+ 
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+#endif
+	int t;
+	prime();
+	string a, b;
+	cin >> t;
+	while (t--)
+	{
+		MS1(dp);
+		cin >> a >> b;
+		int left = 0;
+		int pos = 0;
+		ll no = 0;
+ 
+		for (int i = 0; i < a.length(); i++)
+		{
+			no = no + a[i] - '0';
+			x[pos++] = a[i] - 48;
+		}
+ 
+		/*for(int i=0;i<pos;i++)
+				cout<<x[i];
+			cout<<" prashant kumar singh\n";*/
+		len = a.length();
+		for (int i = 2; i <= 72; i++)
+		{
+			if (!pr[i])
+			{
+				left += rec(0, i, 0);
+			}
+		}
+		//cout<<b<<" pl" <<endl;
+		pos = 0;
+		MS1(dp);
+		len = b.length();
+		for (int i = 0; i < b.length(); i++)
+			x[pos++] = b[i] - 48;
+		int right = 0;
+		for (int i = 2; i <= 72; i++)
+		{
+			if (!pr[i])
+			{
+				right += rec(0, i, 0);
+			}
+			
+		}
+		if (!pr[no])
+			left--;
+		//cout<<right<<" prashant kumar singh \n";
+		cout << (right - left) << endl;
+	}
+	return 0;
+} 

@@ -1,0 +1,87 @@
+//kruskals from codemonk :P
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+ 
+using namespace std;
+const int MAX = 1e5 + 5;
+long long id[MAX], nodes, edges;
+pair <long long, pair<long long, long long> > p[MAX];
+ 
+void initialize()
+{
+	for (int i = 0; i < MAX; ++i)
+		id[i] = i;
+}
+ 
+long long  root(long long x)
+{
+	while (id[x] != x)
+	{
+		id[x] = id[id[x]];
+		x = id[x];
+	}
+	return x;
+}
+ 
+void union1(long long  x, long long y)
+{
+	long long  p = root(x);
+	long long  q = root(y);
+	id[p] = id[q];
+}
+long long s;
+long long kruskal(pair<long long, pair<long long, long long> > p[])
+{
+	long long x, y;
+	long long cost, minimumCost = nodes * s;
+	for (int i = 0; i < edges; ++i)
+	{
+		// Selecting edges one by one in increasing order from the beginning
+		x = p[i].second.first;
+		y = p[i].second.second;
+		cost = p[i].first;
+		// Check if the selected edge is creating a cycle or not
+		if (root(x) != root(y))
+		{
+			minimumCost += cost;
+ 
+			union1(x, y);
+		}
+	}
+	return minimumCost;
+}
+ 
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+#endif
+	long long x, y, t;
+	long long weight, cost, minimumCost;
+	cin >> t;
+	while (t--)
+	{
+		initialize();
+		cin >> nodes >> edges;
+		for (int i = 0; i < edges; ++i)
+		{
+			cin >> x >> y >> weight;
+			int val =0;
+			while(weight>1)
+			{
+				weight>>=1;
+				val++;
+			}
+			p[i] = make_pair(val, make_pair(x, y));
+		}
+		// Sort the edges in the ascending order
+		sort(p, p + edges);
+		minimumCost = kruskal(p);
+		cout << minimumCost+1 << endl;
+	}
+	return 0;
+} 

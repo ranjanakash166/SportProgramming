@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<iostream>
+#define  ll  unsigned long long
+ll mod=1;
+ll pro(ll n)
+{
+	ll p3=1,p2=1,sigx=0,nth=0,sum=0;
+	while(n)
+	{
+		if(n%2)
+		{
+			sum=(sum+(nth+1)*p3+sigx*(p2>>1))%mod;
+			nth+=p2;
+		}
+		sigx+=p3;
+		p3*=3;
+		p2<<=1;
+		n>>=1;
+	}
+	return sum;	
+}
+int main()
+{
+	ll t,ans,l,r;
+	for(int i=1;i<=32;i++)
+	mod<<=1;
+	scanf("%lld",&t);
+	while(t--)
+	{
+		scanf("%lld%lld",&l,&r);
+		ll ans=(pro(r)-pro(l-1))%mod;
+		printf("%lld\n",ans);
+	}
+	return 0;
+}
+ 

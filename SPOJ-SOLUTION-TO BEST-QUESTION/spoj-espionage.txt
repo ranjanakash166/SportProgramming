@@ -1,0 +1,33 @@
+#include<iostream>
+#include<set>
+using namespace std;
+int main()
+{
+	int t,n,a,b,i,r,k=0;
+	cin>>t;
+	while(t--)
+	{
+		set<int>spy;
+		set<int>citizen;
+		cin>>n>>r;
+		for(i=0;i<r;i++)
+		{
+			cin>>a>>b;
+			spy.insert(a);
+			citizen.insert(b);
+		}
+		bool status=true;
+		for(i=0;i<n;i++)
+		{
+			if(spy.count(i)>0&&citizen.count(i)>0)
+			status=false;
+		}
+			k++;
+			cout<<"Scenario #"<<k<<": ";
+		if(status)
+		cout<<"spying\n";
+		else
+		cout<<"spied\n";
+	}
+	return 0;
+} 

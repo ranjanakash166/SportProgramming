@@ -1,0 +1,125 @@
+/*
+* @problem: xx
+* PLEDGE : I WILL BE BLUE IN CODEFORCES BEFORE MY VACATION ENDS.
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 1e5 + 10;
+using namespace std;
+vector<int>v[MAX];
+ll sz[MAX], cdep[MAX], dep[MAX], t, in[MAX], ot[MAX];
+int n;
+void dfs(int pr, int gp)
+{
+	in[pr] = ++t;
+	sz[pr] = 1;
+	cdep[pr] = dep[pr];
+	for (int i = 0; i < v[pr].size(); i++)
+	{
+		int cur = v[pr][i];
+		if (cur != gp)
+		{
+			dep[cur] = dep[pr] + 1;
+			dfs(cur, pr);
+			cdep[pr] += cdep[cur];
+			sz[pr] += sz[cur];
+		}
+	}
+	ot[pr] = t;
+}
+ll bt[3][4 * MAX];
+void update(int ty, int x , ll  val)
+{
+	//cout<<x<<endl;
+	while (x < 4 * MAX)
+	{
+		bt[ty][x] = (bt[ty][x] + val) % mod;
+		x += (x & (-x));
+		//cout << x << endl;
+	}
+}
+ll query(int ty, int x)
+{
+	ll ans = 0;
+	while (x > 0)
+	{
+		ans = (ans + bt[ty][x]) % mod;
+		x -= (x & (-x));
+	}
+	return (ans + mod) % mod;
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	int m, tq, u, x, k;
+	cin >> n;
+	for (int i = 2; i <= n; i++)
+	{
+		cin >> x;
+		v[x].pb(i);
+	}
+	dfs(1, -1);
+	// for (int i = 1; i <= n; i++)
+	// {
+	// 	//cout << i << " " << in[i] << " " << ot[i] << endl;
+	// 	cout << dep[i] << " " << cdep[i] << " " << sz[i] << endl;
+	// }
+	cin >> m;
+	for (int i = 1; i <= m; i++)
+	{
+		cin >> tq;
+		if (tq == 1)
+		{
+			cin >> u >> x >> k;
+			//cout << in[u] << " ---- >" << endl;
+			ll res = ((sz[u] * (x - (dep[u] * k) % mod)) % mod + (cdep[u] * k) % mod) % mod;
+			update(0, (in[u] + 1), (x - dep[u]*k) % mod);
+			update(0, (ot[u] + 1), (-(x - dep[u]*k) % mod + mod) % mod);
+			update(1, (in[u] + 1), k % mod);
+			update(1, (ot[u] + 1), -k % mod);
+			update(2, in[u], res % mod);
+		}
+		else
+		{
+			cin >> u;
+			ll ans = (query(0, in[u]) * sz[u] ) % mod + (query(1, in[u]) * cdep[u]) % mod + ((query(2, ot[u]) - query(2, (in[u] - 1)))) % mod;
+			cout << (ans + mod) % mod << endl;
+		}
+	}
+	return 0;
+} 

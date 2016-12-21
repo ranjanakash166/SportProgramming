@@ -1,0 +1,46 @@
+#include<iostream>
+using namespace std;
+#define ll long long
+ll n,c; 
+ll ar[500007];
+ll func(ll k)
+{
+	int cnt=0,i;
+	if(k==0)
+	return 0;
+	for(i=0;i<n;i++)
+	cnt+=ar[i]/k;
+	if(cnt>=c)
+	return 1;
+	return 0;
+}
+ll search()
+{
+  ll lo=1,hi=1000000000,ans=0,mid;
+  while(lo<=hi)
+  {
+   mid=lo+(hi-lo)/2;
+  	if(func(mid)==1)
+  	{
+  	ans=mid;
+  	lo=mid+1;
+  	}
+  	else 
+  	hi =mid-1;
+  }
+  return ans;
+}
+int main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);
+	ll t;
+	cin>>t;
+	while(t--)
+	{
+		cin>>n>>c;
+		for(int i=0;i<n;i++)
+		cin>>ar[i];
+		cout<<search()<<"\n";
+	}
+	return 0;
+} 

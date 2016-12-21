@@ -1,0 +1,103 @@
+/*
+* @problem: ONEZERO
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#include <stack>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 2e5 + 10;
+using namespace std;
+int vis[MAX], parent[MAX], val[MAX];
+int n;
+queue<int>q;
+inline void bfs()
+{
+	parent[1] = 0;
+	q.push(1);
+	while (!q.empty())
+	{
+		int cur = q.front();
+		q.pop();
+		if (cur == 0)
+		{
+			stack<int>s;
+			while (parent[cur])
+			{
+				s.push(val[cur]);
+				cur = parent[cur];
+			}
+			s.push(1);
+			while (!s.empty())
+			{
+				cout << s.top();
+				s.pop();
+			}
+			cout << endl;
+			return ;
+		}
+		int md = (cur * 10) % n;
+		if (parent[md] == -1)
+		{
+			val[md] = 0;
+			parent[md] = cur;
+			q.push(md);
+		}
+		md = (cur * 10 + 1) % n;
+		if (parent[md] == -1)
+		{
+			val[md] = 1;
+			parent[md] = cur;
+			q.push(md);
+		}
+	}
+}
+int main()
+{
+ 
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("../input.txt", "r", stdin);
+	//freopen("../output.txt","w",stdout);
+#endif
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		cin >> n;
+		//cout << n << endl;
+		while(!q.empty())
+			q.pop();
+		MS1(parent);
+		bfs();
+	}
+	return 0;
+} 

@@ -1,0 +1,80 @@
+/*
+* @problem: ADDAP
+*/
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <string.h>
+#include <queue>
+#include <set>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <functional>
+#include <bitset>
+#include <iomanip>
+#define ll long long
+#define pi acos(-1.0)
+#define pb push_back
+#define MS0(ar) memset(ar,0,sizeof ar)
+#define MS1(ar) memset(ar,-1,sizeof ar)
+#define ff first
+#define ss second
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define ind(a) scanf("%d",&a)
+#define inf(a) scanf("%lf",&a)
+#define inl(a) scanf("%lld",&a)
+#define ins(a) scanf("%s",a)
+#define pd(a) printf("%d\n",a)
+#define pl(a) printf("%lld\n",a);
+#define bitcnt(x) __builtin_popcountll(x)
+#define mod 1000000007
+const int MAX = 1e5 + 10;
+using namespace std;
+pll res[MAX];
+vector<int>v[MAX];
+int n, q, x, y, u;
+void dfs(int pr, int ch)
+{
+	for (int i = 0; i < v[pr].size(); i++)
+	{
+		int child = v[pr][i];
+		if (child != ch)
+		{
+			res[child].ff = (res[pr].ff + res[pr].ss + res[child].ff + mod) % mod;
+			res[child].ss = (res[child].ss + res[pr].ss + mod) % mod;
+			dfs(child, pr);
+		}
+	}
+}
+int main()
+{
+	ind(n);
+	for (int i = 0; i < n - 1; i++)
+	{
+		ind(x);
+		ind(y);
+		v[x].pb(y);
+		v[y].pb(x);
+	}
+	// for (int i = 1; i <= n; i++)
+	// {
+	// 	res[i].ff = res[i].ss = 0;
+	// }
+	ind(q);
+	while (q--)
+	{
+		ind(u);
+		ind(x);
+		ind(y);
+		res[u].ff = (res[u].ff + x + mod) % mod;
+		res[u].ss = (res[u].ss + y + mod) % mod;
+	}
+	dfs(1, -1);
+	for (int i = 1; i <= n; i++)
+		pl(res[i].ff);
+	return 0;
+} 

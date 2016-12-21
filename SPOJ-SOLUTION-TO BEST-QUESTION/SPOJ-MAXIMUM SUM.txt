@@ -1,0 +1,104 @@
+#include<iostream>
+#define ll long long 
+#define fasthoja ios_base::sync_with_stdio(0);cin.tie(0);
+using namespace std;
+struct node{
+	ll val;
+	ll indx;
+};
+ll a[100005];
+node t[400020];
+node make_node(ll in,ll it)
+{
+	node data;
+	data.val=in;
+	data.indx=it;
+	return data;
+}
+node combine(node l,node r)
+{
+	node res;
+	if(l.val>r.val)
+	{
+	 res.val=l.val;
+	 res.indx=l.indx;	
+	}
+	else
+	{
+	res.val=r.val;
+	 res.indx=r.indx;	
+	}
+	return res;
+}
+void build ( ll v, ll tl, ll tr) {
+	if (tl == tr)
+	{
+		t[v] = make_node(a[tl],tl);
+    }	
+	else {
+		ll tm = (tl + tr) / 2;
+		build ( v*2, tl, tm);
+		build ( v*2+1, tm+1, tr);
+		t[v] = combine (t[v*2], t[v*2+1]);
+	}
+}
+void update(ll v,ll tl,ll tr,ll pos,ll new_val)
+{
+	if(tl==tr)
+	{
+	t[v]=make_node(new_val,tl);
+    }
+    else
+    {
+	ll tm=(tl+tr)/2;
+	if(pos<=tm)
+	update(2*v,tl,tm,pos,new_val);
+	else
+	update(2*v+1,tm+1,tr,pos,new_val);
+	t[v]=combine(t[2*v],t[2*v+1]);
+    }
+}
+node query (ll v, ll tl, ll tr, ll l, ll r) {
+	if (l == tl && tr == r)
+		return t[v];
+	int tm = (tl + tr) / 2;
+	if (r <= tm)
+		return query (v*2, tl, tm, l, r);
+	if (l > tm)
+		return query (v*2+1, tm+1, tr, l, r);
+	return combine (
+		query (v*2, tl, tm, l, tm),
+		query (v*2+1, tm+1, tr, tm+1, r)
+	);
+}
+int main()
+{
+ fasthoja
+	ll x,b,c,q;
+	char ch;
+	cin>>x;
+	for(int i=0;i<x;i++)	
+	cin>>a[i+1];
+	build(1,1,x+1);
+	cin>>q;
+	while(q--)
+	{
+		cin>>ch>>b>>c;
+		if(ch=='U')
+		update(1,1,x+1,b,c);
+		else
+		{
+			ll ans=0;
+			node answala,supp;
+			answala=query(1,1,x+1,b,c);
+			ans+=answala.val;
+			ll  y=answala.val;
+			ll z=answala.indx;
+			update(1,1,x+1,z,-100000);
+			ans+=query(1,1,x+1,b,c).val;
+			update(1,1,x+1,z,y);
+			cout<<ans<<"\n";
+		}	
+	}
+	return 0;
+} 

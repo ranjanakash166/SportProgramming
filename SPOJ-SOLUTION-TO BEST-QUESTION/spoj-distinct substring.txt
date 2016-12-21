@@ -1,0 +1,98 @@
+// created  : Prashant Kumar Singh :)
+//my first KMP code :D
+#include<iostream>
+#include<algorithm>
+#include<utility>
+#include<cstring>
+#include<set>
+#include<map>
+#include<vector>
+#define ll int
+#define pi acos(-1.0)
+#define mp make_pair
+#define sz(a) int((a).size())
+#define pb push_back
+#define f(i,l,r) for(int i=l;i<=r;i++)
+#define in_T int t;for(scanf("%d",&t);t--;)
+#define in_I(a) scanf("%d",&a)
+#define in_F(a) scanf("%lf",&a)
+#define in_L(a) scanf("%lld",&a)
+#define in_S(a) scanf("%s",a)
+#define newline printf("\n")
+#define MAX(a,b) a>b?a:b
+#define MIN(a,b) a<b?a:b
+#define SWAP(a,b) {int tmp=a;a=b;b=tmp;}
+#define P_I(a) printf("%d\n",a)
+#define P_L(a) printf("%lld\n",a);
+using namespace std;
+ll ffunc[10000];
+ll compute_failure_function(ll psize, string pattern)
+{
+	ll k = -1, i;
+	ffunc[0] = k;
+	for (i = 1ll; i < psize; i++) {
+		while (k > -1 && pattern[k + 1] != pattern[i])
+			k = ffunc[k];
+		if (pattern[i] == pattern[k + 1])
+			k++;
+		ffunc[i] = k;
+	}
+	ll ma = -2;
+	for (int i = 0 ; i < psize; i++)
+		ma = max(ma, ffunc[i]);
+	return ma;
+}
+/*bool KMP(string target, string pattern)
+{
+	bool ispresent = false;
+	ll psize = pattern.length();
+	compute_failure_function(psize, pattern);
+	int tsize = target.length();
+	ll  k = -1, i;
+	for (i = 0ll; i < tsize; i++) {
+		while (k > -1 && pattern[k + 1] != target[i])
+			k = ffunc[k];
+		if (target[i] == pattern[k + 1])
+			k++;
+		if (k == psize - 1) {
+			cout << i - k << "\n";
+			ispresent = true;
+		}
+	}
+	return ispresent;
+}*/
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	ll t, lim, res = 0;
+	string s, str;
+	cin >> t;
+	while (t--)
+	{
+		cin >> s;
+		ll len = s.length();
+		res=0;
+		for (int i = 0; i < len; i++)
+		{
+			str = s.substr(0, i + 1);
+			if ((i + 1) % 2 == 0)
+				lim = i / 2;
+			else
+				lim = i / 2 - 1;
+			for (int j = 0; j <= lim; j++)
+			{
+				swap(str[j], str[i - j]);
+			}
+			//cout << str << endl;
+			//MS0(ffunc);
+ 
+			//cout << i << " | " << compute_failure_function(i + 1, str)<<endl;
+			res += i - compute_failure_function(i + 1, str);
+		}
+		cout << res << endl;
+	}
+	return 0;
+}
+ 
+ 

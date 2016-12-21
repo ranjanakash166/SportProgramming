@@ -1,0 +1,98 @@
+#include<bits/stdc++.h>
+using namespace std;
+// my first dijkstras implementation  
+#define _ ios_base::sync_with_stdio(0);cin.tie(0);
+long long d[1000000];
+list<pair<int,int> > *graph;
+void dijkstra(int root) {
+ 
+set<pair<int,int> > pq;
+set<pair<int,int> > ::iterator it;
+ 
+int u,v,wt;
+ 
+list<pair<int,int> > :: iterator i;
+ 
+ 
+ 
+ 
+d[root]=0;
+ 
+pq.insert(pair<int,int>(0,root));
+ 
+while(pq.size()!=0)
+{
+    it=pq.begin();
+ 
+    u=it->second;
+ 
+    pq.erase(it);
+ 
+    for(i=graph[u].begin(); i!=graph[u].end(); i++)
+    {
+        v=i->first;
+        wt=i->second;
+        if(d[v]>d[u]+wt)
+        {
+            if(d[v]!=1e8)
+            {
+                pq.erase(pq.find(pair<int,int>(d[v],v)));
+            }
+            d[v]=d[u]+wt;
+            pq.insert(pair<int,int>(d[v],v));
+        }
+ 
+    }
+ 
+}
+}
+ 
+void addedge(int src,int des,int wt) { pair<int,int> x;
+ 
+x.first=des;
+x.second=wt;
+ 
+graph[src].push_back(x);
+x.first=src;
+ 
+x.second=wt;
+ 
+graph[des].push_back(x);
+ }
+ 
+int main() {
+_
+int i;
+ 
+int t;
+ 
+cin>>t;
+ 
+while(t--){
+ 
+int v,e,src,des,x,y,wt;
+ 
+cin>>v>>e>>x>>y;
+for(i=0; i<=v; i++)
+{
+    d[i]=1e8;
+ 
+}
+ 
+graph=new list<pair<int,int> >[v+1];
+ 
+for(i=0; i<e; i++)
+{
+    cin>>src>>des>>wt;
+    addedge(src,des,wt);
+}
+ 
+dijkstra(x);
+ 
+if(d[y]!=1e8)
+cout<<d[y]<<endl;
+else
+    cout<<"NONE"<<endl;
+}
+return 0;
+} 

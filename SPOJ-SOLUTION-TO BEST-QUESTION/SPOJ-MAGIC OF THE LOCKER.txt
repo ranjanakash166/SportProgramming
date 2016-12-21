@@ -1,0 +1,68 @@
+// created  : Prashant Kumar Singh :)
+#include<iostream>
+#include<algorithm>
+#include<utility>
+#include<cstring>
+#include<set>
+#include<map>
+#include<vector>
+#include<functional>
+#define ll long long
+#define gr greater<ll>()
+#define pi acos(-1.0)
+#define mp make_pair
+#define sz(a) int((a).size())
+#define pb push_back
+#define f(i,l,r) for(int i=l;i<=r;i++)
+#define in_T int t;for(scanf("%d",&t);t--;)
+#define in_I(a) scanf("%d",&a)
+#define in_F(a) scanf("%lf",&a)
+#define in_L(a) scanf("%lld",&a)
+#define in_S(a) scanf("%s",a)
+#define newline printf("\n")
+#define MAX(a,b) a>b?a:b
+#define MIN(a,b) a<b?a:b
+#define SWAP(a,b) {int tmp=a;a=b;b=tmp;}
+#define P_I(a) printf("%d\n",a)
+#define P_L(a) printf("%lld\n",a);
+using namespace std;
+const ll mod =1000000007;
+ll powr(ll a,ll b)
+{
+	if(b==0)
+		return 1;
+	if(b%2==1)
+		return (a*powr(a,b-1))%mod;
+	else 
+	{
+		ll y=(powr(a,b/2))%mod;
+		return (y*y)%mod;
+	}
+}
+int main()
+{
+	ios_base::sync_with_stdio(0);
+    cin.tie(0);
+     #ifndef ONLINE_JUDGE
+     freopen("input.txt","r",stdin);
+     #endif
+     ll no,t;
+     cin>>t;
+	while(cin>>no)
+	{
+	if(no<=3)
+		cout<<no<<"\n";
+	else
+	{
+		if(no%3==0)
+			cout<<powr(3,no/3)<<"\n";
+		else if(no%3==1)
+			cout<<(powr(3,(no-4)/3)*2*2)%mod<<"\n";
+		else
+			cout<<(powr(3,((no-2)/3))*2)%mod<<"\n";
+	}
+}
+	return 0;
+}
+ 
+ 
